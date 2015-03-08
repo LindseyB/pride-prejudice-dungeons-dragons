@@ -57,8 +57,12 @@ def generate_sentences():
 
     print "tweeting..."
     status = random.choice(sentences)
-    twitter.update_status(status=status)
+    try:
+        twitter.update_status(status=status)
+    except:
+        print "some sort of error... don't really care..."
 
 while True:
     generate_sentences()
+    print "sleeping..."
     time.sleep(3600)
