@@ -1,0 +1,5 @@
+[twitter]
+app_key: twitter_app_key
+app_secret: twitter_app_secret
+oauth_token: twitter_oauth_token
+oauth_token_secret: twitter_oauth_token_secret

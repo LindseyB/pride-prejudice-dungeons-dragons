@@ -1,6 +1,16 @@
 import random;
 import sys;
 import time;
+from twython import Twython
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.read("config.cfg")
+config.sections()
+APP_KEY = config.get("twitter", "app_key")
+APP_SECRET = config.get("twitter", "app_secret")
+OAUTH_TOKEN = config.get("twitter", "oauth_token")
+OAUTH_TOKEN_SECRET = config.get("twitter", "oauth_token_secret")
 
 stopword = "\n" # Since we split on whitespace, this can never be a word
 stopsentence = (".", "!", "?",) # Cause a "new sentence" if found at the end of a word
@@ -11,6 +21,8 @@ sentencesep  = "\n" #String used to separate sentences
 w1 = stopword
 w2 = stopword
 table = {}
+
+twitter = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
 with open("source.txt") as f:
     for line in f:
@@ -43,8 +55,10 @@ def generate_sentences():
             sentence.append(newword)
         w1, w2 = w2, newword
 
-    print random.choice(sentences)
+    print "tweeting..."
+    status = random.choice(sentences)
+    twitter.update_status(status=status)
 
 while True:
     generate_sentences()
-    time.sleep(10)
+    time.sleep(3600)
