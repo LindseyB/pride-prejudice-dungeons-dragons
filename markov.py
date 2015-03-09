@@ -63,7 +63,7 @@ def generate_sentences():
         w1, w2 = w2, newword
 
     print "tweeting..."
-    status = random.choice(sentences)
+    status = max(sentences, key=len)
     try:
         if len(status) > 100:
             # create the image to tweet with
