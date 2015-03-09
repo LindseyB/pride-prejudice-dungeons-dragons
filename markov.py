@@ -1,6 +1,11 @@
-import random;
-import sys;
-import time;
+import random
+import sys
+import time
+import PIL
+import textwrap
+from PIL import ImageFont
+from PIL import Image
+from PIL import ImageDraw
 from twython import Twython
 import ConfigParser
 
@@ -42,6 +47,8 @@ w2 = stopword
 
 def generate_sentences():
     global w1, w2
+    margin = offset = 10
+    font = ImageFont.truetype("Lora-Regular.ttf", 16)
     sentence = []
     sentences = []
 
@@ -58,7 +65,19 @@ def generate_sentences():
     print "tweeting..."
     status = random.choice(sentences)
     try:
-        twitter.update_status(status=status)
+        if len(status) > 100:
+            # create the image to tweet with
+            img = Image.new("RGBA", (400,400),(255,255,255))
+            draw = ImageDraw.Draw(img)
+            for line in textwrap.wrap(status, width=50):
+                draw.text((margin, offset), line, (0,0,0), font=font)
+                offset += font.getsize(line)[1]
+            draw = ImageDraw.Draw(img)
+
+            status = (status[:100] + '...')
+            twitter.update_status_with_media(status=status, media=draw.getdata())
+        else:
+            twitter.update_status(status=status)
     except:
         print "some sort of error... don't really care..."
 
