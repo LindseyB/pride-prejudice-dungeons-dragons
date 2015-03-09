@@ -73,13 +73,15 @@ def generate_sentences():
                 draw.text((margin, offset), line, (0,0,0), font=font)
                 offset += font.getsize(line)[1]
             draw = ImageDraw.Draw(img)
+            img.save('temp.png')
+            media = open('temp.png', 'rb')
 
             status = (status[:100] + '...')
-            twitter.update_status_with_media(status=status, media=draw.getdata())
+            twitter.update_status_with_media(media=media, status=status)
         else:
             twitter.update_status(status=status)
-    except:
-        print "some sort of error... don't really care..."
+    except Exception as e:
+        print "some sort of error... don't really care...", str(e)
 
 while True:
     generate_sentences()
